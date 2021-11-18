@@ -17,7 +17,7 @@ def make_train_env(all_args):
     def get_env_fn(rank):
         def init_env():
             if all_args.env_name == "GoogleFootball":
-                env = Football_Env.GFootballEnv(all_args, True)
+                env = Football_Env.GFootballEnv(all_args)
             else:
                 print("Can not support the " + all_args.env_name + "environment.")
                 raise NotImplementedError
@@ -93,12 +93,12 @@ def main(args):
     if all_args.use_wandb:
         run = wandb.init(config=all_args,
                          project=all_args.env_name,
-                         entity=all_args.user_name,
+                         #entity=all_args.user_name,
                          notes=socket.gethostname(),
                          name=str(all_args.algorithm_name) + "_" +
                               str(all_args.experiment_name) +
                               "_seed" + str(all_args.seed),
-                         group=all_args.map_name,
+                         #group=all_args.map_name,
                          dir=str(run_dir),
                          job_type="training",
                          reinit=True)

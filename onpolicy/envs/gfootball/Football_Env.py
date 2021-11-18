@@ -1,18 +1,19 @@
 import gfootball.env as football_env
 import gym
+gym.logger.set_level(40)
 import numpy as np
 
 class GFootballEnv(gym.Env):
   def __init__(self, args, is_render=False):
     self.num_agents = 4
     self.env = football_env.create_environment(
-        env_name=args.scenario_name,#'5_vs_5',
+        env_name=args.scenario_name,
         stacked=False,
-        #logdir=os.path.join(tempfile.gettempdir(), 'rllib_test'),
-        write_goal_dumps=False, write_full_episode_dumps=False, render=is_render,
+        write_goal_dumps=False, write_full_episode_dumps=False,
+        representation='pixels' if is_render is True else 'simple115v2',
+        render=is_render,
         dump_frequency=0,
-        number_of_left_players_agent_controls=self.num_agents,
-        channel_dimensions=(42, 42)
+        number_of_left_players_agent_controls=self.num_agents
     )
     self.num_actions = 19
     self.available_actions = []
@@ -22,13 +23,13 @@ class GFootballEnv(gym.Env):
     self.observation_space = [gym.spaces.Box(
         low=self.env.observation_space.low[0],
         high=self.env.observation_space.high[0],
-        dtype=self.env.observation_space.dtype)for _ in range(self.num_agents)]
+        dtype=np.float32)for _ in range(self.num_agents)]
     self.share_observation_space = [gym.spaces.Box(
         low=self.env.observation_space.low[0],
         high=self.env.observation_space.high[0],
-        dtype=self.env.observation_space.dtype) for _ in range(self.num_agents)]
+        dtype=np.float32) for _ in range(self.num_agents)]
     #print(self.env.observation_space.low[0].shape) #42 42 4, value=255
-    #print(self.env.observation_space.high[0].shape)
+    #self.env.observation_space.dtype
 
   def seed(self, seed=None):
       if seed is None:
