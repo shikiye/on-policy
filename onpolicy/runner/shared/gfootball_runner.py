@@ -46,7 +46,10 @@ class GFRunner(Runner):
                 values, actions, action_log_probs, rnn_states, rnn_states_critic = self.collect(step)
                 # Obser reward and next obs
                 #1 4 1 print(actions.shape) 装有actions_env独热的指数
-                actions_tmp = [actions[0][0][0], actions[0][1][0], actions[0][2][0], actions[0][3][0]]
+                actions_tmp = []
+                for i in range(0, self.num_agents):
+                    actions_tmp.append(actions[0][i][0])
+                #actions_tmp = [actions[0][0][0], actions[0][1][0], actions[0][2][0], actions[0][3][0]]
                 #obs, reward, done, info = self.envs.envs[0].env.step(actions_tmp)
                 obs, share_obs, rewards, dones, infos, available_actions = self.envs.step(actions_tmp)
                 #data = obs, rewards, dones, infos, values, actions, action_log_probs, rnn_states, rnn_states_critic
@@ -172,7 +175,10 @@ class GFRunner(Runner):
             eval_rnn_states = np.array(np.split(_t2n(eval_rnn_states), self.n_eval_rollout_threads))
 
             # Obser reward and next obs
-            eval_actions_tmp = [eval_actions[0][0][0], eval_actions[0][1][0], eval_actions[0][2][0], eval_actions[0][3][0]]
+            eval_actions_tmp = []
+            for i in range(0, self.num_agents):
+                eval_actions_tmp.append(eval_actions[0][i][0])
+            #eval_actions_tmp = [eval_actions[0][0][0], eval_actions[0][1][0], eval_actions[0][2][0], eval_actions[0][3][0]]
             #print(self.eval_envs.step(eval_actions_tmp))
             eval_obs, _, eval_rewards, eval_dones, eval_infos, _ = self.eval_envs.step(eval_actions_tmp)
             #print(eval_obs)

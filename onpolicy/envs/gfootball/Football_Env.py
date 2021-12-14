@@ -5,7 +5,7 @@ import numpy as np
 
 class GFootballEnv(gym.Env):
   def __init__(self, args, is_render=False):
-    self.num_agents = 4
+    self.num_agents = args.num_agents
     self.env = football_env.create_environment(
         env_name=args.scenario_name,
         stacked=False,
@@ -46,6 +46,11 @@ class GFootballEnv(gym.Env):
   def step(self, action):
     obs, rew, done, info = self.env.step(action)
     rews = []
+    '''
+    if self._agent:
+      reward = ([reward] * self._agent.num_controlled_left_players() +
+                [-reward] * self._agent.num_controlled_right_players())
+    '''
     for i in range(len(rew)):
         rews.append([rew[0]])
     rews = np.array(rews)
